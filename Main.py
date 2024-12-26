@@ -50,6 +50,10 @@ gate:str = 'open'           # Start state
 que_state:str = 'LEEG'      # Start state
 person_amount:int = 0       # Start amount
 
+current_time:time = time.time()
+last_check_time:time = current_time
+check_time_interval:float = 0.2
+
 def setup():
     global Button_in, Button_out, Led_red, Led_orange, Led_green, Servo
    
@@ -161,11 +165,14 @@ def check_state():
                 que_state = 'BIJNA VOL'
 
 def update_screen():
-    clear_screen()
-    print_message(title_text, 0, 0)
-    print_message(state_text, 3, 1)
-    print_message(person_amount, 0, 1)
-    time.sleep(1)
+    global last_check_time
+    current_time = time.time()
+    if current_time - last_check_time >= check_time_interval:
+        clear_screen()
+        print_message(title_text, 0, 0)
+        print_message(state_text, 3, 1)
+        print_message(person_amount, 0, 1)
+        last_check_time = current_time
 
 setup()
 
