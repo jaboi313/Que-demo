@@ -76,7 +76,7 @@ def convert_message(text:str) -> bytes:
         Returns:
             bytes: converted text
     """
-    message_bytes = [ord(char) for char in text]
+    message_bytes = [ord(char) for char in str(text)]
     return message_bytes
 
 def clear_screen():
