@@ -5,12 +5,12 @@ arduino.samplingOn(100)
 
 def button_in_callback(value):
     global person_amount
-    if value:
+    if value and person_amount < 160:
         person_amount += 1
 
 def button_out_callback(value):
     global person_amount
-    if value:
+    if value and person_amount > 0:
         person_amount -= 1
 
 def set_leds():
