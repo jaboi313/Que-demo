@@ -165,7 +165,7 @@ def check_state():
             gate = 'closed'
             state_text = "VOL"
             traffic_light = 'red'
-            if person_amount < (160 * Multiplyer):
+            if person_amount < (160 * multiplier):
                 que_state = 'BIJNA VOL'
 
 def update_screen():
