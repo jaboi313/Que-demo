@@ -36,7 +36,7 @@ def set_gate():
             Servo.write(0)
 
 
-global traffic_light, gate, que_state
+global que_state
 # Example :
 # 1.0 = 160
 # 0.1 = 16
@@ -47,10 +47,7 @@ LCD_CLEAR:hex = 0x02
 LCD_SET_CURSOR:hex = 0x03
 
 title_text:str = "Aantal mensen :"
-state_text:str = "LEEG"     # Start text
 
-traffic_light:str = 'green' # Start state
-gate:str = 'open'           # Start state
 que_state:str = 'LEEG'      # Start state
 person_amount:int = 0       # Start amount
 person_amount_max:int = 160
@@ -108,11 +105,13 @@ def check_state():
     global traffic_light, gate, state_text, que_state
     match que_state:
         case 'LEEG':
+            gate = 'open'
             state_text = "LEEG"
             traffic_light = 'green'
             if person_amount > 0:
                 que_state = 'BIJNA LEEG'
         case 'BIJNA LEEG':
+            gate = 'open'
             state_text = "BIJNA LEEG"
             traffic_light = 'green'
             if person_amount < 1:
@@ -120,6 +119,7 @@ def check_state():
             elif person_amount > ((person_amount_max * 0.125) * multiplier):
                 que_state = 'REDELIJK LEEG'                
         case 'REDELIJK LEEG':
+            gate = 'open'
             state_text = "REDELIJK LEEG"
             traffic_light = 'green'
             if person_amount < ((person_amount_max * 0.13125) * multiplier):
@@ -127,6 +127,7 @@ def check_state():
             elif person_amount > ((person_amount_max * 0.3125) * multiplier):
                 que_state = 'MATIG LEEG'  
         case 'MATIG LEEG':
+            gate = 'open'
             state_text = "MATIG LEEG"
             traffic_light = 'green'
             if person_amount < ((person_amount_max * 0.31875) * multiplier):
@@ -134,6 +135,7 @@ def check_state():
             elif person_amount > (((person_amount_max * 0.5) - 1) * multiplier):
                 que_state = 'HALF VOL/LEEG'  
         case 'HALF VOL/LEEG':
+            gate = 'open'
             state_text = "HALF VOL/LEEG"
             traffic_light = 'orange'
             if person_amount < ((person_amount_max * 0.5) * multiplier):
@@ -141,6 +143,7 @@ def check_state():
             elif person_amount > ((person_amount_max * 0.5) * multiplier):
                 que_state = 'MATIG VOL'  
         case 'MATIG VOL':
+            gate = 'open'
             state_text = "MATIG VOL"
             traffic_light = 'orange'
             if person_amount < (((person_amount_max * 0.5) + 1) * multiplier):
@@ -148,6 +151,7 @@ def check_state():
             elif person_amount > ((person_amount_max * 0.6875) * multiplier):
                 que_state = 'REDELIJK VOL'  
         case 'REDELIJK VOL':
+            gate = 'open'
             state_text = "REDELIJK VOL"
             traffic_light = 'orange'
             if person_amount < ((person_amount_max * 0.69375) * multiplier):
