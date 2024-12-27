@@ -5,7 +5,7 @@ arduino.samplingOn(100)
 
 def button_in_callback(value):
     global person_amount
-    if value and person_amount < 160:
+    if value and person_amount < (160 * multiplier):
         person_amount += 1
 
 def button_out_callback(value):
@@ -37,6 +37,10 @@ def set_gate():
 
 
 global traffic_light, gate, que_state
+# Example :
+# 1.0 = 160
+# 0.1 = 16
+multiplier:float = 0.1
 
 LCD_PRINT:hex = 0x01
 LCD_CLEAR:hex = 0x02
@@ -110,58 +114,58 @@ def check_state():
         case 'BIJNA LEEG':
             state_text = "BIJNA LEEG"
             traffic_light = 'green'
-            if person_amount < 1:
+            if person_amount < (1 * multiplier):
                 que_state = 'LEEG'
-            elif person_amount > 20:
+            elif person_amount > (20 * multiplier):
                 que_state = 'REDELIJK LEEG'                
         case 'REDELIJK LEEG':
             state_text = "REDELIJK LEEG"
             traffic_light = 'green'
-            if person_amount < 21:
+            if person_amount < (21 * multiplier):
                 que_state = 'BIJNA LEEG'
-            elif person_amount > 50:
+            elif person_amount > (50 * multiplier):
                 que_state = 'MATIG LEEG'  
         case 'MATIG LEEG':
             state_text = "MATIG LEEG"
             traffic_light = 'green'
-            if person_amount < 51:
+            if person_amount < (51 * multiplier):
                 que_state = 'REDELIJK LEEG'
-            elif person_amount > 79:
+            elif person_amount > (79 * multiplier):
                 que_state = 'HALF VOL/LEEG'  
         case 'HALF VOL/LEEG':
             state_text = "HALF VOL/LEEG"
             traffic_light = 'orange'
-            if person_amount < 80:
+            if person_amount < (80 * multiplier):
                 que_state = 'MATIG LEEG'
-            elif person_amount > 80:
+            elif person_amount > (80 * multiplier):
                 que_state = 'MATIG VOL'  
         case 'MATIG VOL':
             state_text = "MATIG VOL"
             traffic_light = 'orange'
-            if person_amount < 81:
+            if person_amount < (81 * multiplier):
                 que_state = 'HALF VOL/LEEG'
-            elif person_amount > 110:
+            elif person_amount > (110 * multiplier):
                 que_state = 'REDELIJK VOL'  
         case 'REDELIJK VOL':
             state_text = "REDELIJK VOL"
             traffic_light = 'orange'
-            if person_amount < 111:
+            if person_amount < (111 * multiplier):
                 que_state = 'MATIG VOL'
-            elif person_amount > 140:
+            elif person_amount > (140 * multiplier):
                 que_state = 'BIJNA VOL'  
         case 'BIJNA VOL':
             gate = 'open'
             state_text = "BIJNA VOL"
             traffic_light = 'red'
-            if person_amount < 141:
+            if person_amount < (141 * multiplier):
                 que_state = 'REDELIJK VOL'
-            elif person_amount > 159:
+            elif person_amount > (159 * multiplier):
                 que_state = 'VOL'  
         case 'VOL':
             gate = 'closed'
             state_text = "VOL"
             traffic_light = 'red'
-            if person_amount < 160:
+            if person_amount < (160 * Multiplyer):
                 que_state = 'BIJNA VOL'
 
 def update_screen():
