@@ -3,17 +3,20 @@ import time
 arduino = Arduino(Arduino.AUTODETECT)
 arduino.samplingOn(100)
 
-def button_in_callback(value):
+def button_in_callback(value) -> None:
+    """Detect button press and increase 'person_amount' by 1"""
     global person_amount
     if value and person_amount < (person_amount_max * multiplier):
         person_amount += 1
 
-def button_out_callback(value):
+def button_out_callback(value) -> None:
+    """Detect button press and lower 'person_amount' by 1"""
     global person_amount
     if value and person_amount > 0:
         person_amount -= 1
 
-def set_leds():
+def set_leds() -> None:
+    """Enable and disable led's based on 'traffic_light' state"""
     match traffic_light:
         case 'red':
             Led_red.write(1)
@@ -28,7 +31,8 @@ def set_leds():
             Led_orange.write(0)
             Led_green.write(1)
 
-def set_gate():
+def set_gate() -> None:
+    """Move servo based on 'gate' state"""
     match gate:
         case 'open':
             Servo.write(90)
@@ -56,7 +60,12 @@ current_time:time = time.time()
 last_check_time:time = current_time
 check_time_interval:float = 0.2
 
-def setup():
+def setup() -> None:
+    """
+    Declare all ports and type of ports 
+    - See 'get_pin' docstring
+    - For button register callback with callback function, Also enable reporting    
+    """
     global Button_in, Button_out, Led_red, Led_orange, Led_green, Servo
    
     Button_in = arduino.get_pin("d:6:i")
@@ -76,24 +85,24 @@ def setup():
 
 def convert_message(text:str) -> bytes:
     """
-            Convert the string to bytes
-        Args:
+        Convert the string to bytes
+        - Args:
             text (str): text to be converted
-        Returns:
+        - Returns:
             bytes: converted text
     """
     message_bytes = [ord(char) for char in str(text)]
     return message_bytes
 
-def clear_screen():
-    """CLear the LCD screen"""
+def clear_screen() -> None:
+    """Clears the LCD screen"""
     arduino.send_sysex(LCD_CLEAR, [])
 
 def print_message(text:str, cursor_start:int, regel:int) -> None:
     """
-            Displays the text at the specified x & y. 
-            If text exceeds LCD max then text is not wrapped around or displayed a layer below (LCD behaviour)
-        Args:
+        Displays the text at the specified x & y. 
+        If text exceeds LCD max then text is not wrapped around or displayed a layer below (LCD behaviour)
+        - Args:
             text (str): text to be displayed
             cursor_start (int): horizontal starting point of text, starts at 0
             regel (int): vertical starting point of text, starts at 0
@@ -101,7 +110,8 @@ def print_message(text:str, cursor_start:int, regel:int) -> None:
     arduino.send_sysex(LCD_SET_CURSOR, [cursor_start, regel])
     arduino.send_sysex(LCD_PRINT, convert_message(text))
 
-def check_state():
+def check_state() -> None:
+    """Checks current 'que_state' and changes 'gate' state, 'state_text' & 'traffic_light' state"""
     global traffic_light, gate, state_text, que_state
     match que_state:
         case 'LEEG':
@@ -173,7 +183,8 @@ def check_state():
             if person_amount < (person_amount_max * multiplier):
                 que_state = 'BIJNA VOL'
 
-def update_screen():
+def update_screen() -> None:
+    """Update the screen based on time interval"""
     global last_check_time
     current_time = time.time()
     if current_time - last_check_time >= check_time_interval:
