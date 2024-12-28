@@ -190,7 +190,7 @@ def update_screen() -> None:
     if current_time - last_check_time >= check_time_interval:
         clear_screen()
         print_message(title_text, 0, 0)
-        print_message(state_text, 3, 1)
+        print_message(state_text, (len(str(person_amount)) + 1), 1)
         print_message(person_amount, 0, 1)
         last_check_time = current_time
 
