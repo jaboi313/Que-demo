@@ -141,7 +141,7 @@ def check_state() -> None:
             gate = 'open'
             state_text = "REDELIJK LEEG"
             traffic_light = 'green'
-            if person_amount < ((person_amount_max * 0.13125) * multiplier):
+            if person_amount < (((person_amount_max * 0.125) + 1) * multiplier):
                 que_state = 'BIJNA LEEG'
             elif person_amount > ((person_amount_max * 0.3125) * multiplier):
                 que_state = 'MATIG LEEG'  
@@ -149,7 +149,7 @@ def check_state() -> None:
             gate = 'open'
             state_text = "MATIG LEEG"
             traffic_light = 'green'
-            if person_amount < ((person_amount_max * 0.31875) * multiplier):
+            if person_amount < (((person_amount_max * 0.3125) + 1) * multiplier):
                 que_state = 'REDELIJK LEEG'
             elif person_amount > (((person_amount_max * 0.5) - 1) * multiplier):
                 que_state = 'HALF VOL/LEEG'  
@@ -173,7 +173,7 @@ def check_state() -> None:
             gate = 'open'
             state_text = "REDELIJK VOL"
             traffic_light = 'orange'
-            if person_amount < ((person_amount_max * 0.69375) * multiplier):
+            if person_amount < (((person_amount_max * 00.6875) + 1) * multiplier):
                 que_state = 'MATIG VOL'
             elif person_amount > ((person_amount_max * 0.875) * multiplier):
                 que_state = 'BIJNA VOL'  
@@ -181,7 +181,7 @@ def check_state() -> None:
             gate = 'open'
             state_text = "BIJNA VOL"
             traffic_light = 'red'
-            if person_amount < ((person_amount_max * 0.88125) * multiplier):
+            if person_amount < (((person_amount_max * 0.875) + 1)* multiplier):
                 que_state = 'REDELIJK VOL'
             elif person_amount > ((person_amount_max - 1) * multiplier):
                 que_state = 'VOL'  
