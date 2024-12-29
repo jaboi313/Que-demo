@@ -3,13 +3,13 @@ import time
 arduino = Arduino(Arduino.AUTODETECT)
 arduino.samplingOn(100)
 
-def button_in_callback(value) -> None:
+def button_in_callback(value:bool) -> None:
     """Detect button press and increase 'person_amount' by 1"""
     global person_amount
     if value and person_amount < (person_amount_max * multiplier):
         person_amount += 1
 
-def button_out_callback(value) -> None:
+def button_out_callback(value:bool) -> None:
     """Detect button press and lower 'person_amount' by 1"""
     global person_amount
     if value and person_amount > 0:
