@@ -46,15 +46,19 @@ global que_state
 # 0.1 = 16
 multiplier:float = 0.1
 
+lcd_columns:int = 20
+
 LCD_PRINT:hex = 0x01
 LCD_CLEAR:hex = 0x02
 LCD_SET_CURSOR:hex = 0x03
 
 title_text:str = "Aantal mensen :"
+wait_time_title_text:str = "Wacht tijd :"
 
 que_state:str = 'LEEG'      # Start state
 person_amount:int = 0       # Start amount
 person_amount_max:int = 160
+wait_time:int = 0           # Start amount
 
 current_time:time = time.time()
 last_check_time:time = current_time
@@ -98,16 +102,21 @@ def clear_screen() -> None:
     """Clears the LCD screen"""
     arduino.send_sysex(LCD_CLEAR, [])
 
-def print_message(text:str, cursor_start:int, regel:int) -> None:
+def print_message(text:str, row:int, cursor_start:int=None, centered:bool=False, lcd_columns:int=None) -> None:
     """
         Displays the text at the specified x & y. 
         If text exceeds LCD max then text is not wrapped around or displayed a layer below (LCD behaviour)
         - Args:
             text (str): text to be displayed
             cursor_start (int): horizontal starting point of text, starts at 0
-            regel (int): vertical starting point of text, starts at 0
+            row (int): vertical starting point of text, starts at 0
+            centered (bool): if True text is centered on screen based on 'lcd_columns'
+            lcd_columns (int): amount of columns the lcd has
     """
-    arduino.send_sysex(LCD_SET_CURSOR, [cursor_start, regel])
+    if centered:
+        arduino.send_sysex(LCD_SET_CURSOR, [int((lcd_columns/2)-((len(str(text)))/2)), row])
+    else:    
+        arduino.send_sysex(LCD_SET_CURSOR, [cursor_start, row])
     arduino.send_sysex(LCD_PRINT, convert_message(text))
 
 def check_state() -> None:
@@ -189,9 +198,10 @@ def update_screen() -> None:
     current_time = time.time()
     if current_time - last_check_time >= check_time_interval:
         clear_screen()
-        print_message(title_text, 0, 0)
-        print_message(state_text, (len(str(person_amount)) + 1), 1)
-        print_message(person_amount, 0, 1)
+        print_message(title_text + " " + str(person_amount), row=0, cursor_start=0)
+        print_message(wait_time_title_text + " " + str(wait_time), row=1, cursor_start=0)
+        print_message(state_text, row=3, centered=True, lcd_columns=lcd_columns)
+        
         last_check_time = current_time
 
 setup()
