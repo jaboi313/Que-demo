@@ -8,12 +8,18 @@ def button_in_callback(value:bool) -> None:
     global person_amount
     if value and person_amount < (person_amount_max * multiplier):
         person_amount += 1
+        if queue_enable:
+            queue.append(time.time())
+            print(queue)
 
 def button_out_callback(value:bool) -> None:
     """Detect button press and lower 'person_amount' by 1"""
     global person_amount
     if value and person_amount > 0:
         person_amount -= 1
+        if queue_enable:
+            queue.pop(0)
+            print(queue)
 
 def set_leds() -> None:
     """Enable and disable led's based on 'traffic_light' state"""
@@ -58,7 +64,10 @@ wait_time_title_text:str = "Wacht tijd :"
 que_state:str = 'LEEG'      # Start state
 person_amount:int = 0       # Start amount
 person_amount_max:int = 160
+
+queue_enable:bool = True
 wait_time:int = 0           # Start amount
+queue = []
 
 current_time:time = time.time()
 last_check_time:time = current_time
@@ -199,9 +208,11 @@ def update_screen() -> None:
     if current_time - last_check_time >= check_time_interval:
         clear_screen()
         print_message(title_text + " " + str(person_amount), row=0, cursor_start=0)
-        print_message(wait_time_title_text + " " + str(wait_time), row=1, cursor_start=0)
-        print_message(state_text, row=3, centered=True, lcd_columns=lcd_columns)
-        
+        if queue_enable:
+            print_message(wait_time_title_text + " " + str(wait_time), row=1, cursor_start=0)
+            print_message(state_text, row=3, centered=True, lcd_columns=lcd_columns)
+        else:
+            print_message(state_text, row=2, centered=True, lcd_columns=lcd_columns)
         last_check_time = current_time
 
 setup()
