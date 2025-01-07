@@ -29,7 +29,7 @@
 #include <Firmata.h>
 
 // Initialize the LiquidCrystal_I2C library with the I2C address and the numbers of the LCD's columns and rows
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 // Define the SysEx commands
 #define LCD_PRINT 0x01
@@ -536,7 +536,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
       else {
         stopTX = I2C_STOP_TX; // default
       }
-
+      
       switch (mode) {
         case I2C_WRITE:
           Wire.beginTransmission(slaveAddress);
