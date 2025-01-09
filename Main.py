@@ -256,6 +256,6 @@ setup()
 while True:
     check_state()
     set_gate()
-    update_screen()
     calculate()
+    update_screen()
     set_leds()
