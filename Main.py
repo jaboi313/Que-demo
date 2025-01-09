@@ -79,12 +79,13 @@ current_time:time = time.time()
 last_check_time:time = current_time
 check_time_interval:float = 0.2
 
-def calculate():
+def calculate() -> None:
+    """Calculate avarage entries per minute and avarage exits per minute"""
     global avg_entries_per_minute, avg_exits_per_minute
-    AVERAGING_TIME = 60.0
+    AVERAGING_TIME:float = 60.0
     
-    current_time = time.time()
-    count = 0
+    current_time:time = time.time()
+    count:int = 0
     i = len(queue) - 1
     while i >= 0 and current_time - queue[i] < (AVERAGING_TIME  * time_multiplier):
         count += 1
@@ -92,7 +93,7 @@ def calculate():
 
     avg_entries_per_minute = count / AVERAGING_TIME * 60.0
 
-    count_ = 0
+    count_:int = 0
     i = len(exit_times) - 1
     while i >= 0 and current_time - exit_times[i] < (AVERAGING_TIME  * time_multiplier):
         count_ += 1
