@@ -209,7 +209,7 @@ def check_state() -> None:
             gate = 'open'
             state_text = "REDELIJK VOL"
             traffic_light = 'orange'
-            if person_amount < (((person_amount_max * 00.6875) + 1) * multiplier):
+            if person_amount < (((person_amount_max * 0.6875) + 1) * multiplier):
                 que_state = 'MATIG VOL'
             elif person_amount > ((person_amount_max * 0.875) * multiplier):
                 que_state = 'BIJNA VOL'  
