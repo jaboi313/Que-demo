@@ -33,10 +33,7 @@ def calculate_T(total_person:int, arrival_speed:int) -> int:
     return total_time
 
 def calculate_T_diff(arrival_speed:int, processing_speed:int) -> int:
-    if processing_speed-arrival_speed > 0:
-        total_time:int = 1/(processing_speed-arrival_speed)
-    else:
-        total_time:int = 1
+    total_time:int = 1/(processing_speed-arrival_speed)
     return total_time
 
 def calculate_W(total_time:int, service_time:int) -> int:
@@ -44,12 +41,9 @@ def calculate_W(total_time:int, service_time:int) -> int:
     return wait_time
 
 def calculate_S(processing_speed:int) -> int:
-    if processing_speed > 0:
-        service_time:int = 1 / processing_speed
-    else:
-        service_time:int = 0
-    return service_time
+    service_time:int = 1 / processing_speed
 
+    return service_time
 def calculate_N(occupancy_rate:int) -> int:
     total_person:int = occupancy_rate / (1 - occupancy_rate)
     return total_person
