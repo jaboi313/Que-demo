@@ -67,13 +67,13 @@ person_amount:int = 0       # Start amount
 person_amount_max:int = 160
 
 queue_enable:bool = True
-wait_time:int = 0           # Start amount
+wait_time:int = 0
 queue:list = []
-exit_time:float = 0         # Start amount
+exit_time:float = 0
 exit_times:list = []
 
-avg_entries_per_minute:float = 0    # Start amount
-avg_exits_per_minute:float = 0      # Start amount
+avg_entries_per_minute:float = 0
+avg_exits_per_minute:float = 0
 
 current_time:time = time.time()
 last_check_time:time = current_time
