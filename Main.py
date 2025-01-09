@@ -1,5 +1,6 @@
 from pyfirmata2 import Arduino
 import time
+from Wachtrijtheorie import calculate_Total, calculate_diff
 arduino = Arduino(Arduino.AUTODETECT)
 arduino.samplingOn(100)
 
@@ -10,7 +11,6 @@ def button_in_callback(value:bool) -> None:
         person_amount += 1
         if queue_enable:
             queue.append(time.time())
-            print(queue)
 
 def button_out_callback(value:bool) -> None:
     """Detect button press and lower 'person_amount' by 1"""
@@ -18,8 +18,8 @@ def button_out_callback(value:bool) -> None:
     if value and person_amount > 0:
         person_amount -= 1
         if queue_enable:
-            queue.pop(0)
-            print(queue)
+            exit_time = time.time()
+            exit_times.append(exit_time)
 
 def set_leds() -> None:
     """Enable and disable led's based on 'traffic_light' state"""
@@ -51,6 +51,7 @@ global que_state
 # 1.0 = 160
 # 0.1 = 16
 multiplier:float = 0.1
+time_multiplier:float = 0.1
 
 lcd_columns:int = 20
 
@@ -67,11 +68,37 @@ person_amount_max:int = 160
 
 queue_enable:bool = True
 wait_time:int = 0           # Start amount
-queue = []
+queue:list = []
+exit_time:float = 0
+exit_times:list = []
+
+avg_entries_per_minute:float = 0
+avg_exits_per_minute:float = 0
 
 current_time:time = time.time()
 last_check_time:time = current_time
 check_time_interval:float = 0.2
+
+def calculate():
+    global avg_entries_per_minute, avg_exits_per_minute
+    AVERAGING_TIME = 60.0
+    
+    current_time = time.time()
+    count = 0
+    i = len(queue) - 1
+    while i >= 0 and current_time - queue[i] < (AVERAGING_TIME  * time_multiplier):
+        count += 1
+        i -= 1
+
+    avg_entries_per_minute = count / AVERAGING_TIME * 60.0
+
+    count_ = 0
+    i = len(exit_times) - 1
+    while i >= 0 and current_time - exit_times[i] < (AVERAGING_TIME  * time_multiplier):
+        count_ += 1
+        i -= 1
+
+    avg_exits_per_minute = count_ / AVERAGING_TIME * 60.0
 
 def setup() -> None:
     """
@@ -182,7 +209,7 @@ def check_state() -> None:
             gate = 'open'
             state_text = "REDELIJK VOL"
             traffic_light = 'orange'
-            if person_amount < (((person_amount_max * 00.6875) + 1) * multiplier):
+            if person_amount < (((person_amount_max * 0.6875) + 1) * multiplier):
                 que_state = 'MATIG VOL'
             elif person_amount > ((person_amount_max * 0.875) * multiplier):
                 que_state = 'BIJNA VOL'  
@@ -206,10 +233,18 @@ def update_screen() -> None:
     global last_check_time
     current_time = time.time()
     if current_time - last_check_time >= check_time_interval:
+        print(avg_entries_per_minute)
+        print("------------------")
+        print(avg_exits_per_minute)
+        print("------------------")
+        print("------------------")
         clear_screen()
         print_message(title_text + " " + str(person_amount), row=0, cursor_start=0)
         if queue_enable:
-            print_message(wait_time_title_text + " " + str(wait_time), row=1, cursor_start=0)
+            if person_amount > 0:
+                print_message(wait_time_title_text + " " + str(calculate_diff(avg_entries_per_minute, avg_exits_per_minute)), row=1, cursor_start=0)
+            else:
+                print_message(wait_time_title_text + " " + str(wait_time), row=1, cursor_start=0)
             print_message(state_text, row=3, centered=True, lcd_columns=lcd_columns)
         else:
             print_message(state_text, row=2, centered=True, lcd_columns=lcd_columns)
@@ -221,4 +256,5 @@ while True:
     check_state()
     set_gate()
     update_screen()
+    calculate()
     set_leds()
