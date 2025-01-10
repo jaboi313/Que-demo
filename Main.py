@@ -93,14 +93,14 @@ def calculate() -> None:
     if len(queue) > 1:
         total_time:float = (queue[-1] - queue[0]) / (AVERAGING_TIME * time_multiplier)
         entries_count:int = len(queue)
-        avg_entries_per_minute:float = entries_count / total_time
+        avg_entries_per_minute = entries_count / total_time
 
         if len(exit_times) > 1:
             if current_time - exit_times[-1] < (AVERAGING_TIME * time_multiplier):
                 exit_times.pop()
 
         exits_count:int = len(exit_times)
-        avg_exits_per_minute:float = exits_count / total_time
+        avg_exits_per_minute = exits_count / total_time
 
 def setup() -> None:
     """
