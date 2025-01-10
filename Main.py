@@ -73,6 +73,7 @@ person_amount_max:int = 160
 
 queue_enable:bool = True
 wait_time:int = 0
+wait_time_symbol:str = "m"
 queue:list = []
 exit_time:float = 0.0
 exit_times:list = []
@@ -239,9 +240,9 @@ def update_screen() -> None:
         print_message(title_text + " " + str(person_amount), row=0, cursor_start=0)
         if queue_enable:
             if person_amount > 0 and avg_entries_per_minute > 0 and avg_exits_per_minute > 0 and avg_entries_per_minute > avg_exits_per_minute:
-                print_message(wait_time_title_text + " " + str(-1 * (round(calculate_diff(avg_entries_per_minute, avg_exits_per_minute), 2))), row=1, cursor_start=0)
+                print_message(wait_time_title_text + " " + str(-1 * (round(calculate_diff(avg_entries_per_minute, avg_exits_per_minute), 2))) + " " + wait_time_symbol, row=1, cursor_start=0)
             else:
-                print_message(wait_time_title_text + " " + str(wait_time), row=1, cursor_start=0)
+                print_message(wait_time_title_text + " " + str(wait_time) + " " + wait_time_symbol, row=1, cursor_start=0)
             print_message(state_text, row=3, centered=True, lcd_columns=lcd_columns)
         else:
             print_message(state_text, row=2, centered=True, lcd_columns=lcd_columns)
