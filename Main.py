@@ -250,6 +250,7 @@ def update_screen() -> None:
 setup()
 
 while True:
+    time.sleep(0.1)
     check_state()
     set_gate()
     calculate()
