@@ -18,6 +18,8 @@ def button_out_callback(value:bool) -> None:
     if value and person_amount > 0:
         person_amount -= 1
         if queue_enable:
+            if len(queue) > 0:
+                queue.pop()
             exit_time = time.time()
             exit_times.append(exit_time)
 
@@ -82,24 +84,20 @@ check_time_interval:float = 0.2
 def calculate() -> None:
     """Calculate avarage entries per minute and avarage exits per minute"""
     global avg_entries_per_minute, avg_exits_per_minute
+
     AVERAGING_TIME:float = 60.0
-    
     current_time:time = time.time()
-    count:int = 0
-    i = len(queue) - 1
-    while i >= 0 and current_time - queue[i] < (AVERAGING_TIME  * time_multiplier):
-        count += 1
-        i -= 1
+    if len(queue) > 1:
+        total_time:float = (queue[-1] - queue[0]) / (AVERAGING_TIME * time_multiplier)
+        entries_count:int = len(queue)
+        avg_entries_per_minute:float = entries_count / total_time
 
-    avg_entries_per_minute = count / AVERAGING_TIME * 60.0
+        if len(exit_times) > 1:
+            if current_time - exit_times[-1] < (AVERAGING_TIME * time_multiplier):
+                exit_times.pop()
 
-    count_:int = 0
-    i = len(exit_times) - 1
-    while i >= 0 and current_time - exit_times[i] < (AVERAGING_TIME  * time_multiplier):
-        count_ += 1
-        i -= 1
-
-    avg_exits_per_minute = count_ / AVERAGING_TIME * 60.0
+        exits_count:int = len(exit_times)
+        avg_exits_per_minute:float = exits_count / total_time
 
 def setup() -> None:
     """
@@ -242,8 +240,8 @@ def update_screen() -> None:
         clear_screen()
         print_message(title_text + " " + str(person_amount), row=0, cursor_start=0)
         if queue_enable:
-            if person_amount > 0:
-                print_message(wait_time_title_text + " " + str(calculate_diff(avg_entries_per_minute, avg_exits_per_minute)), row=1, cursor_start=0)
+            if person_amount > 0 and avg_entries_per_minute > 0 and avg_exits_per_minute > 0 and avg_entries_per_minute > avg_exits_per_minute:
+                print_message(wait_time_title_text + " " + str(-1 * (round(calculate_diff(avg_entries_per_minute, avg_exits_per_minute), 2))), row=1, cursor_start=0)
             else:
                 print_message(wait_time_title_text + " " + str(wait_time), row=1, cursor_start=0)
             print_message(state_text, row=3, centered=True, lcd_columns=lcd_columns)
