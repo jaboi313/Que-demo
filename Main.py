@@ -56,7 +56,8 @@ multiplier:float = 0.1
 # Example :
 # 1.0 = 60
 # 0.1 = 6
-time_multiplier:float = 0.5
+time_multiplier:float = 1
+use_multiplier_for_time:bool = True
 
 lcd_columns:int = 20
 
@@ -240,7 +241,10 @@ def update_screen() -> None:
         print_message(title_text + " " + str(person_amount), row=0, cursor_start=0)
         if queue_enable:
             if person_amount > 0 and avg_entries_per_minute > 0 and avg_exits_per_minute > 0 and avg_entries_per_minute > avg_exits_per_minute:
-                print_message(wait_time_title_text + " " + str(-1 * (round(calculate_diff(avg_entries_per_minute, avg_exits_per_minute), 2))) + " " + wait_time_symbol, row=1, cursor_start=0)
+                if use_multiplier_for_time:
+                    print_message(wait_time_title_text + " " + str(round(-1 * 100 * multiplier * (round(calculate_diff(avg_entries_per_minute, avg_exits_per_minute), 2)), 2)) + " " + wait_time_symbol, row=1, cursor_start=0)
+                else:
+                    print_message(wait_time_title_text + " " + str(-1 * (round(calculate_diff(avg_entries_per_minute, avg_exits_per_minute), 2))) + " " + wait_time_symbol, row=1, cursor_start=0)
             else:
                 print_message(wait_time_title_text + " " + str(wait_time) + " " + wait_time_symbol, row=1, cursor_start=0)
             print_message(state_text, row=3, centered=True, lcd_columns=lcd_columns)
