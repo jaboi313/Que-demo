@@ -53,7 +53,10 @@ global que_state
 # 1.0 = 160
 # 0.1 = 16
 multiplier:float = 0.1
-time_multiplier:float = 0.1
+# Example :
+# 1.0 = 60
+# 0.1 = 6
+time_multiplier:float = 0.5
 
 lcd_columns:int = 20
 
@@ -71,11 +74,11 @@ person_amount_max:int = 160
 queue_enable:bool = True
 wait_time:int = 0
 queue:list = []
-exit_time:float = 0
+exit_time:float = 0.0
 exit_times:list = []
 
-avg_entries_per_minute:float = 0
-avg_exits_per_minute:float = 0
+avg_entries_per_minute:float = 0.0
+avg_exits_per_minute:float = 0.0
 
 current_time:time = time.time()
 last_check_time:time = current_time
@@ -232,11 +235,6 @@ def update_screen() -> None:
     global last_check_time
     current_time = time.time()
     if current_time - last_check_time >= check_time_interval:
-        print(avg_entries_per_minute)
-        print("------------------")
-        print(avg_exits_per_minute)
-        print("------------------")
-        print("------------------")
         clear_screen()
         print_message(title_text + " " + str(person_amount), row=0, cursor_start=0)
         if queue_enable:
