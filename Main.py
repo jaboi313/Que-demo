@@ -140,7 +140,7 @@ def clear_screen() -> None:
     """Clears the LCD screen"""
     arduino.send_sysex(LCD_CLEAR, [])
 
-def print_message(text:str, row:int, cursor_start:int=None, centered:bool=False, lcd_columns:int=None) -> None:
+def print_message(text:str, row:int, cursor_start:int=0, centered:bool=False, lcd_columns:int=16) -> None:
     """
         Displays the text at the specified x & y. 
         If text exceeds LCD max then text is not wrapped around or displayed a layer below (LCD behaviour)
